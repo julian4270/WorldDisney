@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walt Disney</title>
+</head>
+<body>
+  <h1>Walt Disney Films</h1>
+    <p></p>
+    <h1>Walt Disney List</h1>
+    <% articles.forEach(x => {%>
+    <div>
+      <h1><%= x.title %> </h1>
+      <p><%= x.body %> </p>
+      <a href="/articles/create">Create film</a><br><br>
+      <a href="/articles/<%=x.id%>">Search film</a><br><br>
+      <a href="/articles/update/<%=x.id%>">Update film</a><br><br>
+      <form method="POST" action="/articles/<%=x.id%>?_method=DELETE">
+        <button type="submit">Delete film</button>
+      </form>
+    </div>
+  <% }) %>
+</body>
+</html>

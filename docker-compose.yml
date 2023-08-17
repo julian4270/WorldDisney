@@ -1,0 +1,17 @@
+version: '3'
+ 
+services:
+  db:
+    image: mysql:5.7
+    container_name: disneydb
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: disneydb
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: admin
+    ports:
+      - "6033:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+volumes:
+  dbdata:

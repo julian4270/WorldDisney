@@ -1,0 +1,31 @@
+{
+  "development": {
+    "username": "root",
+    "password": "admin",
+    "database": "DisneyDB",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "admin",
+    "database": "DisneyDB",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "use_env_variable": "",
+    "username": "hapguufwpqrzzv",
+    "password": "f025cb2d683bad8c0cc0a272f36efcd8609b3b1daf852a338bb400fb775a66ab",
+    "database": "d605qfmrvmfmpj",
+    "host": "ec2-54-144-251-233.compute-1.amazonaws.com",
+    "port": "3306",
+    "dialect": "mysql",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}
