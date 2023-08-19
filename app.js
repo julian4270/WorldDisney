@@ -1,6 +1,5 @@
 require("dotenv").config();
-//require("./config/database").connect();
-
+require("./config/database").connect();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const swaggerUi = require('swagger-ui-express');
@@ -11,8 +10,10 @@ const express = require('express');
 const morgan = require('morgan');
 const methodOverride = require('method-override');
 const app = express();
-const {Article} = require('./models');
+const {Character: Character} = require('./models');
+const {Movie: Movie} = require('./models/films');
 const swaggerSpec = swaggerJSDoc(options);
+const post = await Post.create({ title: 'Paranoid test' });
 
 app.use(express.json());
 app.use(express.json({ limit: "50mb" }));
@@ -20,20 +21,33 @@ app.use(express.urlencoded({extended:false}));
 app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 app.set('view engine', 'ejs');
-
+let createTransport = nodemailer.createTransport(jConfig);
 app.get('/', (req, res) => {
-  res.status(300).redirect('/articles');
+  res.status(300).redirect('/characters');
 })
 
-app.get('/articles/create', (req, res) => {
+console.log(post instanceof Post);
+
+class Post extends Model {}
+Post.init({}, {
+  sequelize,
+  paranoid: true,
+  deletedAt: 'Imagen'
+});
+
+app.get('/characters/create', (req, res) => {
   res.render('create');
 })
 
-// Get all Articles
-app.get('/articles', (req, res) => {
-  Article.findAll()
-  .then(articles => {
-    res.status(200).render('index', {articles});
+app.get('/movies/create', (req, res) => {
+  res.render('create');
+})
+
+// Get all Character
+app.get('/characters', (req, res) => {
+  Character.findAll()
+  .then(character => {
+    res.status(200).render('index', {characters: character});
   })
   .catch(err => {
     res.status(400).json({
@@ -42,30 +56,42 @@ app.get('/articles', (req, res) => {
   })
 })
 
-// Create
-app.post('/articles', (req, res) => {
+// Get all Movies
+app.get('/movies', (req, res) => {
+  Movie.findAll()
+  .then(movie => {
+    res.status(200).render('index', {movies: movie});
+  })
+  .catch(err => {
+    res.status(400).json({
+      message: err.message
+    })
+  })
+})
+ 
+// Create Walt Disney Character
+app.post('/characters', (req, res) => {
   console.log(req.body);
-  const {title, body, approved} = req.body;
-  Article.create({
-    title,
-    body,
-    approved
-  }).then((article) => {
-    console.log(article)
-    res.redirect('/articles')
+  const {Imagen, Nombre} = req.body;
+  Character.create({
+    Imagen,
+    Nombre
+  }).then((character) => {
+    console.log(character)
+    res.redirect('/character')
   }).catch(err => {
     res.status(400).json("Can't create character")
   })
 })
 
-// Get Aricle by Id
-app.get('/articles/:id', (req, res) => {
-  Article.findByPk(req.params.id)
-  .then(article => {
-    if(article) {
+// Get character by Id
+app.get('/characters/:id', (req, res) => {
+  Character.findByPk(req.params.id)
+  .then(character => {
+    if(character) {
       res.status(200).render('show', {
-        title:article.title,
-        body: article.body
+        Imagen:character.Imagen,
+        Nombre: character.Nombre
       });
     } else {
       res.status(400).json({
@@ -80,11 +106,62 @@ app.get('/articles/:id', (req, res) => {
   })
 })
 
-app.get('/articles/update/:id', (req, res) => {
-  Article.findByPk(req.params.id)
-  .then(article => {
-    if(article) {
-      res.status(200).render('update', {article});
+// Get Movies by Id
+app.get('/movies/:id', (req, res) => {
+  Movie.findByPk(req.params.id)
+  .then(movie => {
+    if(movie) {
+      res.status(200).render('show', {
+        Imagen:movie.Imagen,
+        Título: movie.Título,
+        Fecha: movie.Fecha,
+        Calificación: movie.Calificación,
+        Personajes: movie.Personajes
+      });
+    } else {
+      res.status(400).json({
+        message: "ID movie is Not Found"
+      })  
+    }
+  })
+  .catch(err => {
+    res.status(400).json({
+      message: err.message
+    })
+  })
+})
+
+// Get Movies by Name
+app.get('/movies/:name', (req, res) => {
+  Movie.findByPk(req.params.name)
+  .then(movie => {
+    if(movie) {
+      res.status(200).render('show', {
+        Imagen:movie.Imagen,
+        Título: movie.Título,
+        Fecha: movie.Fecha,
+        Calificación: movie.Calificación,
+        Personajes: movie.Personajes
+      });
+    } else {
+      res.status(400).json({
+        message: "Name movie is Not Found"
+      })  
+    }
+  })
+  .catch(err => {
+    res.status(400).json({
+      message: err.message
+    })
+  })
+})
+
+// Get waltDisney characters
+app.get('/characters/update/:id', (req, res) => {
+  Character.findByPk(req.params.id)
+  .then(character => {
+    if(character) {
+      res.status(200).render('update', {character: character});
     } else {
       res.status(400).json({
         message: "ID character is Not Found"
@@ -98,45 +175,45 @@ app.get('/articles/update/:id', (req, res) => {
   })
 })
 
-// Update
-app.put('/articles/:id', (req, res) => {
-  const {title, body, approved} = req.body;
-  Article.update(req.body, {
+// Update WaltDisney character
+app.put('/characters/:id', (req, res) => {
+  const {Imagen, Nombre} = req.body;
+  Character.update(req.body, {
     where:{
       id:req.params.id
     }
-  }).then((article) => {
-    res.redirect('/articles')
+  }).then((character) => {
+    res.redirect('/characters')
   }).catch(err => {
     res.status(400).json(`Can't update character - ${err.message}`)
   })
 })
 
-// Update
-app.put('/articles/update/:id', (req, res) => {
-  const {title, body, approved} = req.body;
-  Article.update(req.body, {
+// Update characters by id
+app.put('/characters/update/:id', (req, res) => {
+  const {Imagen, Nombre} = req.body;
+  Character.update(req.body, {
     where:{
       id:req.params.id
     }
-  }).then((article) => {
-    res.redirect('/articles')
+  }).then((character) => {
+    res.redirect('/characters')
   }).catch(err => {
     res.status(400).json(`Can't update character - ${err.message}`)
   })
 })
 
-// Delete
-app.delete('/articles/:id', (req, res) => {
+// Delete character by id
+app.delete('/characters/:id', (req, res) => {
   index = req.params.id;
   console.log(index);
   console.log('Hello World')
-  Article.destroy({
+  Character.destroy({
     where:{
       id:req.params.id
     }
-  }).then((Article) => {  
-    res.redirect('/articles')
+  }).then((Character) => {  
+    res.redirect('/characters')
   }).catch(err => {
     res.status(400).json(`Can't delete character - ${err.message}`)
   })
@@ -226,8 +303,8 @@ app.post("/login", async (req, res) => {
 });
 
 //Welcome Walt Disney page
-app.get("/articles", auth, (req, res) => {
-  res.status(200).send("articles 🙌 ");
+app.get("/characters", auth, (req, res) => {
+  res.status(200).send("characters 🙌 ");
 });
 
 // This should be the last route else any after it won't work
@@ -242,6 +319,67 @@ app.use("*", (req, res) => {
   });
 });
 
+// Define JSON variable for smtp config gmail provider
+let jConfig = {
+  "host":"smtp.gmail.com", 
+  "port":"465", 
+  "secure":false, 
+  "auth":{ 
+        "type":"login", 
+        "user":"test@gmail.com", 
+       "pass":"admin" 
+}
+};
+
+// Define body mail 
+let email ={ 
+  from:"test@gmail.com",  
+  to:"guitarrajulian@hotmail.com",
+  subject:"WalTDisney Test",
+  html:` 
+      <div> 
+      <p>Hola amigo</p> 
+      <p>Esto es una prueba de waltDisney</p> 
+      <p>¿Cómo enviar correos eletrónicos con Nodemailer en NodeJS </p> 
+      </div> 
+  ` 
+};
+
+// sendMail method Nodemailer transport 
+createTransport.sendMail(email, function (error, info) { 
+  if(error){ 
+       console.log("Error to send mail"); 
+  } else{ 
+       console.log("Mail send success!!"); 
+  } 
+  createTransport.close(); 
+});
+
+// Paranoid post find by id
+await Post.findByPk(123);
+
+// Paranoid post all 
+await Post.findAll({
+  where: { Title: 'mickey' }
+});
+
+// Paranoid Destroy by id
+await Post.destroy({
+  where: {
+    id: 1
+  }
+});
+
+// Restore
+await Post.restore({
+  where: {
+    likes: {
+      [Op.gt]: 100
+    }
+  }
+});
+
+// Define swagger Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 module.exports = app;

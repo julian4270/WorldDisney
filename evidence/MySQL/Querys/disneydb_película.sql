@@ -16,31 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `articles`
+-- Table structure for table `pélicula`
 --
 
-DROP TABLE IF EXISTS `articles`;
+DROP TABLE IF EXISTS `pélicula`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `articles` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(400) NOT NULL,
-  `body` varchar(400) NOT NULL,
-  `createdAt` datetime DEFAULT NULL,
-  `updatedAt` datetime DEFAULT NULL,
-  `approved` varchar(400) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+CREATE TABLE `pélicula` (
+  `Imagen` int NOT NULL AUTO_INCREMENT,
+  `Título` varchar(400) NOT NULL,
+  `Fecha` datetime DEFAULT NULL,
+  `Calificación` varchar(400) NOT NULL,
+  `Personajes` varchar(400) DEFAULT NULL,
+  PRIMARY KEY (`Imagen`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `articles`
+-- Dumping data for table `pélicula`
 --
 
-LOCK TABLES `articles` WRITE;
-/*!40000 ALTER TABLE `articles` DISABLE KEYS */;
-INSERT INTO `articles` VALUES (4,'mickey mouse','test','2023-08-17 12:29:17','2023-08-17 12:29:17',NULL),(5,'Pato Donald','El Pato DOnald y sus amigos','2023-08-17 13:02:04','2023-08-17 13:02:04',NULL);
-/*!40000 ALTER TABLE `articles` ENABLE KEYS */;
+LOCK TABLES `pélicula` WRITE;
+/*!40000 ALTER TABLE `pélicula` DISABLE KEYS */;
+INSERT INTO `pélicula` VALUES (4,'mickey mouse','test','2023-08-17 12:29:17','2023-08-17 12:29:17',NULL),(5,'Pato Donald','El Pato DOnald y sus amigos','2023-08-17 13:02:04','2023-08-17 13:02:04',NULL);
+/*!40000 ALTER TABLE `pélicula` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

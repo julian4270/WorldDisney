@@ -1,21 +1,21 @@
-const {Article, sequelize} = require('./models/')
+const {Character: Character, sequelize} = require('./models/')
 
 let characterFilm;
 
-Article.create({
-  title:'Mary Riana',
-  body:'Mary Riana menulis buku',
+Character.create({
+  title:'El pato Donald',
+  body:'El pato donald y sus amigos',
   approved:true
-}).then((article) => {
-  console.log(article)
+}).then((character) => {
+  console.log(character)
 })
 
 console.log(characterFilm);
 
 // Update Cara 1
-Article.update({
-  title:"Tukang Tahu",
-  body:"Tukang Tahu toel toel"
+Character.update({
+  title:"Mickey Mouse",
+  body:"Mickey Mouse y sus amigos"
 },{
   where:{
     id:2
@@ -27,72 +27,72 @@ Article.update({
   console.error(`Error film update - ${err.message}`)
 })
 
-sequelize.query(`UPDATE "Articles" SET approved=false where id = 2`)
+sequelize.query(`UPDATE "personaje" SET approved=false where id = 2`)
   .then(() => console.log('film updated'))
 
 // Find All
-Article.findAll({
+Character.findAll({
   attributes:['title','body'],
   order:[
     ['title', 'desc']
   ]
-}).then((articles) => {
-  articles.map(article => {
+}).then((characters) => {
+  characters.map(characters => {
     const data = {
-      id: article.id,
-      title: article.title,
-      body: article.body,
-      approved: article.approved
+      id: characters.id,
+      title: characters.title,
+      body: characters.body,
+      approved: characters.approved
     }
     console.log(data)
   })
 })
 
 // Find One
-Article.findOne({
+Character.findOne({
   where:{
     approved:false
   }
-}).then((article) => {
+}).then((character) => {
   const data = {
-    id: article.id,
-    title: article.title,
-    body: article.body,
-    approved: article.approved
+    id: character.id,
+    title: character.title,
+    body: character.body,
+    approved: character.approved
   }
   console.log("=======================================")
   console.log(data)
 })
 
 // Find by Primary Key
-Article.findByPk(3).then((article) => {
+Character.findByPk(3).then((character) => {
   const data = {
-    id: article.id,
-    title: article.title,
-    body: article.body,
-    approved: article.approved
+    id: character.id,
+    title: character.title,
+    body: character.body,
+    approved: character.approved
   }
   console.log("***************************************")
   console.log(data)
 })
 
 // Find and Count All
-Article.findAndCountAll().then((articles) => {
+Character.findAndCountAll().then((character) => {
   console.log('.......................................')
-  console.log(articles)
-  articles.rows.map(article => {
+  console.log(character)
+  character.rows.map(character => {
     const data = {
-      id: article.id,
-      title: article.title,
-      body: article.body,
-      approved: article.approved
+      id: character.id,
+      title: character.title,
+      body: character.body,
+      approved: character.approved
     }
     console.log(data)
   })
 })
 
 // Delete
-Article.destroy({
+Character.destroy({
   where:{
     id:3
   }
